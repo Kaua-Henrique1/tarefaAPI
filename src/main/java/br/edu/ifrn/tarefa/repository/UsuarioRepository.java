@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
-public class UsuarioRepository {
+public class UsuarioRepository implements UsuarioRepositoryInterface {
 
     private final Map<Long, Usuario> banco = new LinkedHashMap<>();
     private final AtomicLong sequencia = new AtomicLong();

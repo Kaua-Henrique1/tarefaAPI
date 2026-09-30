@@ -27,9 +27,8 @@ public class TarefaService {
         Tarefa tarefa = new Tarefa(
                 dto.titulo(),
                 false,
-                dto.prazo(),
                 dto.descricao(),
-                "NORMAL"
+                dto.prioridade()
         );
 
         Tarefa salva = repository.salvar(tarefa);

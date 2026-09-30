@@ -1,6 +1,6 @@
 package br.edu.ifrn.tarefa.dto;
 
-import java.time.LocalDate;
+import br.edu.ifrn.tarefa.model.Prioridade;
 
-public record TarefaRequestDto(String titulo, String descricao, LocalDate prazo) {
+public record TarefaRequestDto(String titulo, String descricao, Prioridade prioridade) {
 }

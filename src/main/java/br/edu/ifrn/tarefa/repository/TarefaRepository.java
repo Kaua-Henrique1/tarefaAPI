@@ -1,5 +1,6 @@
 package br.edu.ifrn.tarefa.repository;
 
+import br.edu.ifrn.tarefa.model.Prioridade;
 import br.edu.ifrn.tarefa.model.Tarefa;
 import org.springframework.stereotype.Repository;
 
@@ -26,9 +27,8 @@ public class TarefaRepository {
         Tarefa tarefa = new Tarefa(
                 titulo,
                 false,
-                LocalDate.now().plusDays(1),
                 "Sem descrição",
-                "MÉDIA"
+                Prioridade.BAIXA
         );
 
         return salvar(tarefa);
