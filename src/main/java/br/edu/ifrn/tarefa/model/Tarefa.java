@@ -1,13 +1,15 @@
 package br.edu.ifrn.tarefa.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "tarefas")
 @Setter
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Tarefa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,21 +21,8 @@ public class Tarefa {
     private Prioridade prioridade;
     private boolean concluida;
 
-    public Tarefa() {
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
 
-    public Tarefa(Long id, String titulo, String descricao, Prioridade prioridade, boolean concluida) {
-        this.id = id;
-        this.titulo = titulo;
-        this.descricao = descricao;
-        this.prioridade = prioridade;
-        this.concluida = concluida;
-    }
-
-    public Tarefa(String titulo, boolean concluida, String descricao, Prioridade prioridade) {
-        this.titulo = titulo;
-        this.concluida = concluida;
-        this.descricao = descricao;
-        this.prioridade = prioridade;
-    }
 }

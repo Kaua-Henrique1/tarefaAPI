@@ -1,55 +1,30 @@
 package br.edu.ifrn.tarefa.model;
 
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "usuario")
+@Setter
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Usuario {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false, length = 100)
     private String nome;
+    @Column(nullable = false, length = 100)
     private String email;
     private String cargo;
 
-    public Usuario(Long id, String nome, String email, String cargo) {
-        this.id = id;
-        this.nome = nome;
-        this.email = email;
-        this.cargo = cargo;
-    }
-
-    public Usuario(String nome, String email, String cargo) {
-        this.nome = nome;
-        this.email = email;
-        this.cargo = cargo;
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getCargo() {
-        return cargo;
-    }
-
-    public void setCargo(String cargo) {
-        this.cargo = cargo;
-    }
+    @OneToMany(mappedBy = "dono")
+    private Set<Tarefa> tarefas = new HashSet<>();
 }
 
