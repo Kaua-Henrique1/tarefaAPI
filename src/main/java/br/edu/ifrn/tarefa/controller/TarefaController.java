@@ -39,9 +39,9 @@ public class TarefaController {
         return ResponseEntity.ok(service.buscarPorId(id));
     }
 
-    @GetMapping("/concluidas")
-    public ResponseEntity<List<TarefaResponseDto>> concluidas() {
-        System.out.println("[CONTROLLER] Requisição recebida: GET /tarefas/concluidas");
-        return ResponseEntity.ok(service.listarConcluidos());
-    }
+//    @GetMapping("/concluidas")
+//    public ResponseEntity<List<TarefaResponseDto>> concluidas() {
+//        System.out.println("[CONTROLLER] Requisição recebida: GET /tarefas/concluidas");
+//        return ResponseEntity.ok(service.listarConcluidos());
+//    }
 }
