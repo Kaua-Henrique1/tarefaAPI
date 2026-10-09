@@ -30,5 +30,5 @@ public class TarefaMapper {
                 .concluida(entity.isConcluida())
                 .prioridade(entity.getPrioridade())
                 .build();
-
+    }
 }
