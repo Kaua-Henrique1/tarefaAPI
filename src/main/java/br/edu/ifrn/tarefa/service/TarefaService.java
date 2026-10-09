@@ -2,76 +2,63 @@ package br.edu.ifrn.tarefa.service;
 
 import br.edu.ifrn.tarefa.dto.TarefaRequestDto;
 import br.edu.ifrn.tarefa.dto.TarefaResponseDto;
+import br.edu.ifrn.tarefa.mapper.TarefaMapper;
 import br.edu.ifrn.tarefa.model.Tarefa;
 import br.edu.ifrn.tarefa.repository.TarefaRepository;
-import br.edu.ifrn.tarefa.strategy.LowPriorityStrategy;
-import br.edu.ifrn.tarefa.strategy.NormalPriorityStrategy;
-import br.edu.ifrn.tarefa.strategy.PriorityStrategy;
-import br.edu.ifrn.tarefa.strategy.UrgentPriorityStrategy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TarefaService {
 
     private final TarefaRepository repository;
+    private TarefaMapper tarefaMapper;
 
     public TarefaService(TarefaRepository repository) {
         this.repository = repository;
     }
 
+    @Transactional
     public TarefaResponseDto criar(TarefaRequestDto dto) {
-        Tarefa tarefa = new Tarefa(
-                dto.titulo(),
-                false,
-                dto.descricao(),
-                dto.prioridade()
-        );
 
-        Tarefa salva = repository.salvar(tarefa);
-        return toResponseDto(salva);
+        if (repository.equals(dto)) {
+            throw new RuntimeException("Já existe um tarefa cadastrado com esses parâmetros " + dto.titulo());
+        }
+
+        Tarefa entidy = tarefaMapper.toEntity(dto);
+        Tarefa salva = repository.save(entidy);
+        return tarefaMapper.toDTO(salva);
     }
 
     public List<TarefaResponseDto> listarTodas() {
-        return repository.listarTodas().stream()
-                .map(this::toResponseDto)
-                .toList();
+
+        return repository.findAll()
+                .stream()
+                .map(tarefaMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     public TarefaResponseDto buscarPorId(Long id) {
-        Tarefa tarefa = repository.buscarPorId(id)
-                .orElseThrow(() -> new RuntimeException("Tarefa não encontrada"));
-        return toResponseDto(tarefa);
+        Tarefa tarefa = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tarefa não encontrado com o ID:" + id));
+        return tarefaMapper.toDTO(tarefa);
     }
 
-    public List<TarefaResponseDto> listarConcluidos() {
-        return repository.listarConcluidas().stream()
-                .map(this::toResponseDto)
-                .toList();
+
+    public TarefaResponseDto atualizar(Long id, TarefaRequestDto dto) {
+
+        Tarefa tarefa = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("ID do Tarefa não encontrada"));
+        return tarefaMapper.toDTO(tarefa);
     }
 
-    private TarefaResponseDto toResponseDto(Tarefa tarefa) {
-        return new TarefaResponseDto(
-                tarefa.getId(),
-                tarefa.getTitulo(),
-                tarefa.isConcluida(),
-                tarefa.getPrioridade()
-        );
-    }
-
-    private PriorityStrategy escolherEstrategia(LocalDate prazo) {
-        if (prazo == null) {
-            return new LowPriorityStrategy();
-        }
-        long dias = ChronoUnit.DAYS.between(LocalDate.now(), prazo);
-        if (dias <= 1) {
-            return new UrgentPriorityStrategy();
-        } else if (dias <= 7) {
-            return new NormalPriorityStrategy();
-        }
-        return new LowPriorityStrategy();
+    public TarefaResponseDto deletar(Long id) {
+        Tarefa deleta = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("ID do Tarefa não encontrada"));
+        repository.delete(deleta);
+        return tarefaMapper.toDTO(deleta);
     }
 }
