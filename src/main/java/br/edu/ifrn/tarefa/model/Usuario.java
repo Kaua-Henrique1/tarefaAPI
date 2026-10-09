@@ -24,7 +24,7 @@ public class Usuario {
     private String email;
     private String cargo;
 
-    @OneToMany(mappedBy = "dono")
+    @OneToMany(mappedBy = "usuario")
     private Set<Tarefa> tarefas = new HashSet<>();
 }
 
